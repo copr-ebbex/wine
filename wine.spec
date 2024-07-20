@@ -41,7 +41,7 @@
 
 Name:           wine
 Version:        9.5
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A compatibility layer for windows applications
 
 License:        LGPL-2.1-or-later
@@ -2824,6 +2824,9 @@ fi
 %endif
 
 %changelog
+* Sat Jul 20 2024 Fedora Release Engineering <releng@fedoraproject.org> - 9.5-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_41_Mass_Rebuild
+
 * Thu Mar 28 2024 Michael Cronenworth <mike@cchtml.com> - 9.5-1
 - version update
 
