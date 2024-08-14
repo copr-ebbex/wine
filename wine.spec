@@ -3,7 +3,7 @@
 
 %global no64bit   0
 %global winegecko 2.47.4
-%global winemono  9.0.0
+%global winemono  9.2.0
 #global _default_patch_fuzz 2
 %ifarch %{ix86}
 %global winepedir i386-windows
@@ -40,8 +40,8 @@
 %endif
 
 Name:           wine
-Version:        9.5
-Release:        2%{?dist}
+Version:        9.15
+Release:        1%{?dist}
 Summary:        A compatibility layer for windows applications
 
 License:        LGPL-2.1-or-later
@@ -88,7 +88,8 @@ Patch100:       wine-7.22-autoconf-2.72.patch
 
 Patch511:       wine-cjk.patch
 
-Patch900:       wine-staging-9.0.patch
+# https://github.com/wine-staging/wine-staging/commit/cd2cce28ccd2791d0a7ab02bb02b804551ee4095
+Patch900:       wine-staging-9.15-esync.patch
 
 %if 0%{?wine_staging}
 # wine-staging patches
@@ -195,8 +196,8 @@ BuildRequires:  mingw32-libxml2
 BuildRequires:  mingw64-libxml2
 BuildRequires:  mingw32-libxslt
 BuildRequires:  mingw64-libxslt
-BuildRequires:  mingw32-vkd3d >= 1.11
-BuildRequires:  mingw64-vkd3d >= 1.11
+BuildRequires:  mingw32-vkd3d >= 1.12
+BuildRequires:  mingw64-vkd3d >= 1.12
 BuildRequires:  mingw32-vulkan-headers
 BuildRequires:  mingw64-vulkan-headers
 BuildRequires:  mingw32-zlib
@@ -688,12 +689,8 @@ This package adds the opencl driver for wine.
 # setup and apply wine-staging patches
 gzip -dc %{SOURCE900} | tar -xf - --strip-components=1
 
-# https://bugs.winehq.org/show_bug.cgi?id=54868
-sed -i 's/DWORD pitch_in, DWORD pitch_out/unsigned int pitch_in, unsigned int pitch_out/' patches/wined3d-WINED3DFMT_B8G8R8X8_UNORM/0001-wined3d-Implement-WINED3DFMT_B8G8R8X8_UNORM-to-WINED.patch
-
-# Fix pointer types for i686 build
-%patch -P 900 -p0 -b.staging
-staging/patchinstall.py DESTDIR="`pwd`" --all -W Compiler_Warnings -W shell32-IconCache
+%patch -P 900 -p1 -b.esync
+staging/patchinstall.py DESTDIR="`pwd`" --all -W server-Stored_ACLs
 
 %endif
 # 0%%{?wine_staging}
@@ -1214,6 +1211,7 @@ fi
 %{_libdir}/wine/%{winesodir}/avicap32.so
 %{_libdir}/wine/%{winepedir}/avifil32.dll
 %{_libdir}/wine/%{winepedir}/avrt.dll
+%{_libdir}/wine/%{winepedir}/bcp47langs.dll
 %{_libdir}/wine/%{winesodir}/bcrypt.so
 %{_libdir}/wine/%{winepedir}/bcrypt.dll
 %{_libdir}/wine/%{winepedir}/bcryptprimitives.dll
@@ -1237,6 +1235,7 @@ fi
 %{_libdir}/wine/%{winepedir}/comsvcs.dll
 %{_libdir}/wine/%{winepedir}/concrt140.dll
 %{_libdir}/wine/%{winepedir}/connect.dll
+%{_libdir}/wine/%{winepedir}/coremessaging.dll
 %{_libdir}/wine/%{winepedir}/credui.dll
 %{_libdir}/wine/%{winepedir}/crtdll.dll
 %{_libdir}/wine/%{winesodir}/crypt32.so
@@ -1564,6 +1563,7 @@ fi
 %{_libdir}/wine/%{winepedir}/presentationfontcache.exe
 %{_libdir}/wine/%{winepedir}/printui.dll
 %{_libdir}/wine/%{winepedir}/prntvpt.dll
+%{_libdir}/wine/%{winepedir}/profapi.dll
 %{_libdir}/wine/%{winepedir}/propsys.dll
 %{_libdir}/wine/%{winepedir}/psapi.dll
 %{_libdir}/wine/%{winepedir}/pstorec.dll
@@ -1586,6 +1586,7 @@ fi
 %{_libdir}/wine/%{winepedir}/riched20.dll
 %{_libdir}/wine/%{winepedir}/riched32.dll
 %{_libdir}/wine/%{winepedir}/robocopy.exe
+%{_libdir}/wine/%{winepedir}/rometadata.dll
 %{_libdir}/wine/%{winepedir}/rpcrt4.dll
 %{_libdir}/wine/%{winepedir}/rsabase.dll
 %{_libdir}/wine/%{winepedir}/rsaenh.dll
@@ -1706,7 +1707,7 @@ fi
 %{_libdir}/wine/%{winepedir}/windows.media.mediacontrol.dll
 %{_libdir}/wine/%{winepedir}/windows.media.speech.dll
 %if 0%{?wine_staging}
-%{_libdir}/wine/%{winepedir}/windows.networking.connectivity
+%{_libdir}/wine/%{winepedir}/windows.networking.connectivity.dll
 %endif
 %{_libdir}/wine/%{winepedir}/windows.networking.dll
 %{_libdir}/wine/%{winepedir}/windows.networking.hostname.dll
@@ -1716,6 +1717,7 @@ fi
 %{_libdir}/wine/%{winepedir}/windows.storage.applicationdata.dll
 %{_libdir}/wine/%{winepedir}/windows.system.profile.systemmanufacturers.dll
 %{_libdir}/wine/%{winepedir}/windows.ui.dll
+%{_libdir}/wine/%{winepedir}/windows.web.dll
 %{_libdir}/wine/%{winepedir}/windowscodecs.dll
 %{_libdir}/wine/%{winepedir}/windowscodecsext.dll
 %{_libdir}/wine/%{winepedir}/winebus.sys
@@ -1727,8 +1729,10 @@ fi
 %{_libdir}/wine/%{winesodir}/wineusb.so
 %{_libdir}/wine/%{winesodir}/winevulkan.so
 %{_libdir}/wine/%{winepedir}/winevulkan.dll
+%if 0%{?wine_staging}
 %{_libdir}/wine/%{winepedir}/winewayland.drv
 %{_libdir}/wine/%{winesodir}/winewayland.so
+%endif
 %{_libdir}/wine/%{winepedir}/winex11.drv
 %{_libdir}/wine/%{winesodir}/winex11.so
 %{_libdir}/wine/%{winepedir}/wing32.dll
@@ -2034,6 +2038,7 @@ fi
 %{_libdir}/wine/%{winesodir}/avicap32.dll.so
 %{_libdir}/wine/%{winesodir}/avifil32.dll.so
 %{_libdir}/wine/%{winesodir}/avrt.dll.so
+%{_libdir}/wine/%{winesodir}/bcp47langs.dll.so
 %{_libdir}/wine/%{winesodir}/bcrypt.dll.so
 %{_libdir}/wine/%{winesodir}/bcryptprimitives.dll.so
 %{_libdir}/wine/%{winesodir}/bluetoothapis.dll.so
@@ -2056,6 +2061,7 @@ fi
 %{_libdir}/wine/%{winesodir}/comsvcs.dll.so
 %{_libdir}/wine/%{winesodir}/concrt140.dll.so
 %{_libdir}/wine/%{winesodir}/connect.dll.so
+%{_libdir}/wine/%{winesodir}/coremessaging.dll.so
 %{_libdir}/wine/%{winesodir}/credui.dll.so
 %{_libdir}/wine/%{winesodir}/crtdll.dll.so
 %{_libdir}/wine/%{winesodir}/crypt32.dll.so
@@ -2355,6 +2361,7 @@ fi
 %{_libdir}/wine/%{winesodir}/presentationfontcache.exe.so
 %{_libdir}/wine/%{winesodir}/printui.dll.so
 %{_libdir}/wine/%{winesodir}/prntvpt.dll.so
+%{_libdir}/wine/%{winesodir}/profapi.dll.so
 %{_libdir}/wine/%{winesodir}/propsys.dll.so
 %{_libdir}/wine/%{winesodir}/psapi.dll.so
 %{_libdir}/wine/%{winesodir}/pstorec.dll.so
@@ -2376,6 +2383,7 @@ fi
 %{_libdir}/wine/%{winesodir}/riched20.dll.so
 %{_libdir}/wine/%{winesodir}/riched32.dll.so
 %{_libdir}/wine/%{winesodir}/robocopy.exe.so
+%{_libdir}/wine/%{winesodir}/rometadata.dll.so
 %{_libdir}/wine/%{winesodir}/rpcrt4.dll.so
 %{_libdir}/wine/%{winesodir}/rsabase.dll.so
 %{_libdir}/wine/%{winesodir}/rsaenh.dll.so
@@ -2498,6 +2506,7 @@ fi
 %{_libdir}/wine/%{winesodir}/windows.storage.applicationdata.dll.so
 %{_libdir}/wine/%{winesodir}/windows.system.profile.systemmanufacturers.dll.so
 %{_libdir}/wine/%{winesodir}/windows.ui.so
+%{_libdir}/wine/%{winesodir}/windows.web.dll.so
 %{_libdir}/wine/%{winesodir}/windowscodecs.dll.so
 %{_libdir}/wine/%{winesodir}/windowscodecsext.dll.so
 %{_libdir}/wine/%{winesodir}/winebus.sys.so
@@ -2824,6 +2833,9 @@ fi
 %endif
 
 %changelog
+* Tue Aug 13 2024 Michael Cronenworth <mike@cchtml.com> - 9.15-1
+- version update
+
 * Sat Jul 20 2024 Fedora Release Engineering <releng@fedoraproject.org> - 9.5-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_41_Mass_Rebuild
 
