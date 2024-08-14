@@ -98,12 +98,9 @@ Source900: https://github.com/wine-staging/wine-staging/archive/v%{version}.tar.
 %endif
 
 %if !%{?no64bit}
-%if 0%{?fedora} > 36
-ExclusiveArch:  %{ix86} x86_64 aarch64
-%else
 # Fedora 36 Clang doesn't build PE binaries on ARM at the moment
+# Wine 9.15 and higher requires ARM MinGW binaries (dlltool)
 ExclusiveArch:  %{ix86} x86_64
-%endif
 %else
 ExclusiveArch:  %{ix86}
 %endif
