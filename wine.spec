@@ -3,7 +3,7 @@
 
 %global no64bit   0
 %global winegecko 2.47.4
-%global winemono  9.2.0
+%global winemono  9.3.0
 #global _default_patch_fuzz 2
 %ifarch %{ix86}
 %global winepedir i386-windows
@@ -40,8 +40,8 @@
 %endif
 
 Name:           wine
-Version:        9.15
-Release:        2%{?dist}
+Version:        9.18
+Release:        1%{?dist}
 Summary:        A compatibility layer for windows applications
 
 License:        LGPL-2.1-or-later
@@ -83,13 +83,7 @@ Source501:      wine-tahoma.conf
 # and provide a readme
 Source502:      wine-README-tahoma
 
-# Autoconf 2.72 support - https://bugzilla.redhat.com/show_bug.cgi?id=2143724
-Patch100:       wine-7.22-autoconf-2.72.patch
-
 Patch511:       wine-cjk.patch
-
-# https://github.com/wine-staging/wine-staging/commit/cd2cce28ccd2791d0a7ab02bb02b804551ee4095
-Patch900:       wine-staging-9.15-esync.patch
 
 %if 0%{?wine_staging}
 # wine-staging patches
@@ -167,6 +161,7 @@ BuildRequires:  mpg123-devel
 BuildRequires:  SDL2-devel
 BuildRequires:  vulkan-devel
 BuildRequires:  libappstream-glib
+BuildRequires:  pcsc-lite-devel
 
 # Silverlight DRM-stuff needs XATTR enabled.
 %if 0%{?wine_staging}
@@ -211,6 +206,7 @@ Requires:       wine-fonts = %{version}-%{release}
 Requires:       wine-core(x86-32) = %{version}-%{release}
 Requires:       wine-cms(x86-32) = %{version}-%{release}
 Requires:       wine-ldap(x86-32) = %{version}-%{release}
+Requires:       wine-smartcard(x86-32) = %{version}-%{release}
 Requires:       wine-twain(x86-32) = %{version}-%{release}
 Requires:       wine-pulseaudio(x86-32) = %{version}-%{release}
 %if 0%{?fedora}
@@ -236,6 +232,7 @@ Recommends:     gstreamer1-plugins-good(x86-32)
 Requires:       wine-core(x86-64) = %{version}-%{release}
 Requires:       wine-cms(x86-64) = %{version}-%{release}
 Requires:       wine-ldap(x86-64) = %{version}-%{release}
+Requires:       wine-smartcard(x86-64) = %{version}-%{release}
 Requires:       wine-twain(x86-64) = %{version}-%{release}
 Requires:       wine-pulseaudio(x86-64) = %{version}-%{release}
 %if 0%{?fedora}
@@ -258,6 +255,7 @@ Recommends:     gstreamer1-plugins-good(x86-64)
 Requires:       wine-core = %{version}-%{release}
 Requires:       wine-cms = %{version}-%{release}
 Requires:       wine-ldap = %{version}-%{release}
+Requires:       wine-smartcard = %{version}-%{release}
 Requires:       wine-twain = %{version}-%{release}
 Requires:       wine-pulseaudio = %{version}-%{release}
 %if 0%{?fedora}
@@ -272,6 +270,7 @@ Requires:       samba-winbind-clients
 Requires:       wine-core(aarch-64) = %{version}-%{release}
 Requires:       wine-cms(aarch-64) = %{version}-%{release}
 Requires:       wine-ldap(aarch-64) = %{version}-%{release}
+Requires:       wine-smartcard(aarch-64) = %{version}-%{release}
 Requires:       wine-twain(aarch-64) = %{version}-%{release}
 Requires:       wine-pulseaudio(aarch-64) = %{version}-%{release}
 Requires:       wine-opencl(aarch-64) = %{version}-%{release}
@@ -628,6 +627,13 @@ Requires: wine-core = %{version}-%{release}
 %description cms
 Color Management for wine
 
+%package smartcard
+Summary: Smart card support for wine
+Requires: wine-core = %{version}-%{release}
+
+%description smartcard
+Smart card support for wine
+
 %package twain
 Summary: Twain support for wine
 Requires: wine-core = %{version}-%{release}
@@ -679,14 +685,12 @@ This package adds the opencl driver for wine.
 
 %prep
 %setup -qn wine-%{version}
-%patch -P 100 -p1 -b.autoconf
 %patch -P 511 -p1 -b.cjk
 
 %if 0%{?wine_staging}
 # setup and apply wine-staging patches
 gzip -dc %{SOURCE900} | tar -xf - --strip-components=1
 
-%patch -P 900 -p1 -b.esync
 staging/patchinstall.py DESTDIR="`pwd`" --all -W server-Stored_ACLs
 
 %endif
@@ -1007,7 +1011,7 @@ fi
 # handle upgrades for a few package updates
 %{_sbindir}/alternatives --remove 'wine-d3d8%{?_isa}' %{_libdir}/wine/wine-d3d8.dll 2>/dev/null
 %{_sbindir}/alternatives --remove 'wine-d3d9%{?_isa}' %{_libdir}/wine/wine-d3d9.dll 2>/dev/null
-%{_sbindir}/alternatives --remove 'wine-d3d10%{?_isa}' %{_libdir}/wine/wine-d3d10.dll 2>/dev/null
+%{_sbindir}/alternatives --remove 'wine-d3d10core%{?_isa}' %{_libdir}/wine/wine-d3d10core.dll 2>/dev/null
 %{_sbindir}/alternatives --remove 'wine-d3d11%{?_isa}' %{_libdir}/wine/wine-d3d11.dll 2>/dev/null
 %ifarch x86_64 aarch64
 %{_sbindir}/alternatives --install %{_bindir}/wine \
@@ -1044,7 +1048,7 @@ if [ $1 -eq 0 ] ; then
 %endif
   %{_sbindir}/alternatives --remove 'wine-d3d8%{?_isa}' %{_libdir}/wine/%{winepedir}/wine-d3d8.dll
   %{_sbindir}/alternatives --remove 'wine-d3d9%{?_isa}' %{_libdir}/wine/%{winepedir}/wine-d3d9.dll
-  %{_sbindir}/alternatives --remove 'wine-d3d10%{?_isa}' %{_libdir}/wine/%{winepedir}/wine-d3d10.dll
+  %{_sbindir}/alternatives --remove 'wine-d3d10core%{?_isa}' %{_libdir}/wine/%{winepedir}/wine-d3d10core.dll
   %{_sbindir}/alternatives --remove 'wine-d3d11%{?_isa}' %{_libdir}/wine/%{winepedir}/wine-d3d11.dll
 fi
 
@@ -1220,6 +1224,7 @@ fi
 %{_libdir}/wine/%{winepedir}/clock.exe
 %{_libdir}/wine/%{winepedir}/clusapi.dll
 %{_libdir}/wine/%{winepedir}/cng.sys
+%{_libdir}/wine/%{winepedir}/colorcnv.dll
 %{_libdir}/wine/%{winepedir}/combase.dll
 %{_libdir}/wine/%{winepedir}/comcat.dll
 %{_libdir}/wine/%{winepedir}/comctl32.dll
@@ -1269,6 +1274,7 @@ fi
 %{_libdir}/wine/%{winepedir}/dcomp.dll
 %{_libdir}/wine/%{winepedir}/ddraw.dll
 %{_libdir}/wine/%{winepedir}/ddrawex.dll
+%{_libdir}/wine/%{winepedir}/desk.cpl
 %{_libdir}/wine/%{winepedir}/devenum.dll
 %{_libdir}/wine/%{winepedir}/dhcpcsvc.dll
 %{_libdir}/wine/%{winepedir}/dhcpcsvc6.dll
@@ -1386,6 +1392,7 @@ fi
 %{_libdir}/wine/%{winepedir}/ksuser.dll
 %{_libdir}/wine/%{winepedir}/ktmw32.dll
 %{_libdir}/wine/%{winepedir}/l3codeca.acm
+%{_libdir}/wine/%{winepedir}/l3codecx.ax
 %{_libdir}/wine/%{winepedir}/light.msstyles
 %{_libdir}/wine/%{winepedir}/loadperf.dll
 %{_libdir}/wine/%{winesodir}/localspl.so
@@ -1403,8 +1410,11 @@ fi
 %{_libdir}/wine/%{winepedir}/mciwave.dll
 %{_libdir}/wine/%{winepedir}/mf.dll
 %{_libdir}/wine/%{winepedir}/mf3216.dll
+%{_libdir}/wine/%{winepedir}/mfasfsrcsnk.dll
 %{_libdir}/wine/%{winepedir}/mferror.dll
+%{_libdir}/wine/%{winepedir}/mfh264enc.dll
 %{_libdir}/wine/%{winepedir}/mfmediaengine.dll
+%{_libdir}/wine/%{winepedir}/mfmp4srcsnk.dll
 %{_libdir}/wine/%{winepedir}/mfplat.dll
 %{_libdir}/wine/%{winepedir}/mfplay.dll
 %{_libdir}/wine/%{winepedir}/mfreadwrite.dll
@@ -1496,6 +1506,7 @@ fi
 %{_libdir}/wine/%{winepedir}/msvcrtd.dll
 %{_libdir}/wine/%{winepedir}/msvfw32.dll
 %{_libdir}/wine/%{winepedir}/msvidc32.dll
+%{_libdir}/wine/%{winepedir}/msvproc.dll
 %{_libdir}/wine/%{winepedir}/mswsock.dll
 %{_libdir}/wine/%{winepedir}/msxml.dll
 %{_libdir}/wine/%{winepedir}/msxml2.dll
@@ -1574,6 +1585,7 @@ fi
 %{_libdir}/wine/%{winepedir}/rasdlg.dll
 %{_libdir}/wine/%{winepedir}/regapi.dll
 %{_libdir}/wine/%{winepedir}/regini.exe
+%{_libdir}/wine/%{winepedir}/resampledmo.dll
 %{_libdir}/wine/%{winepedir}/resutils.dll
 %{_libdir}/wine/%{winepedir}/riched20.dll
 %{_libdir}/wine/%{winepedir}/riched32.dll
@@ -1712,6 +1724,8 @@ fi
 %{_libdir}/wine/%{winepedir}/windows.web.dll
 %{_libdir}/wine/%{winepedir}/windowscodecs.dll
 %{_libdir}/wine/%{winepedir}/windowscodecsext.dll
+%{_libdir}/wine/%{winepedir}/winedmo.dll
+%{_libdir}/wine/%{winesodir}/winedmo.so
 %{_libdir}/wine/%{winepedir}/winebus.sys
 %{_libdir}/wine/%{winesodir}/winegstreamer.so
 %{_libdir}/wine/%{winepedir}/winegstreamer.dll
@@ -1738,12 +1752,14 @@ fi
 %{_libdir}/wine/%{winepedir}/winsta.dll
 %{_libdir}/wine/%{winepedir}/wintypes.dll
 %{_libdir}/wine/%{winepedir}/wldp.dll
+%{_libdir}/wine/%{winepedir}/wmadmod.dll
 %{_libdir}/wine/%{winepedir}/wmasf.dll
 %{_libdir}/wine/%{winepedir}/wmi.dll
 %{_libdir}/wine/%{winepedir}/wmic.exe
 %{_libdir}/wine/%{winepedir}/wmiutils.dll
 %{_libdir}/wine/%{winepedir}/wmp.dll
 %{_libdir}/wine/%{winepedir}/wmvcore.dll
+%{_libdir}/wine/%{winepedir}/wmvdecod.dll
 %{_libdir}/wine/%{winepedir}/spoolss.dll
 %{_libdir}/wine/%{winesodir}/win32u.so
 %{_libdir}/wine/%{winesodir}/winebus.so
@@ -2757,6 +2773,14 @@ fi
 %{_libdir}/wine/%{winesodir}/mscms.dll.so
 %endif
 
+# smartcard subpackage
+%files smartcard
+%{_libdir}/wine/%{winesodir}/winscard.so
+%{_libdir}/wine/%{winepedir}/winscard.dll
+%ifarch %{arm}
+%{_libdir}/wine/%{winesodir}/winscard.dll.so
+%endif
+
 # twain subpackage
 %files twain
 %{_libdir}/wine/%{winepedir}/twain_32.dll
@@ -2826,6 +2850,9 @@ fi
 %endif
 
 %changelog
+* Sun Sep 22 2024 Zephyr Lykos <fedora@mochaa.ws> - 9.18-1
+- version update
+
 * Sat Sep 07 2024 Zephyr Lykos <fedora@mochaa.ws> - 9.15-2
 - Adapt alternatives setup to DXVK 2.0
 
