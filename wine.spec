@@ -41,7 +41,7 @@
 
 Name:           wine
 Version:        9.18
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A compatibility layer for windows applications
 
 License:        LGPL-2.1-or-later
@@ -76,6 +76,7 @@ Source201:      wine.directory
 # mime types
 Source300:      wine-mime-msi.desktop
 
+Patch200:       https://gitlab.winehq.org/wine/wine/-/merge_requests/6547.patch
 
 # smooth tahoma (#693180)
 # disable embedded bitmaps
@@ -686,6 +687,7 @@ This package adds the opencl driver for wine.
 %prep
 %setup -qn wine-%{version}
 %patch -P 511 -p1 -b.cjk
+%patch -P 200 -p1
 
 %if 0%{?wine_staging}
 # setup and apply wine-staging patches
@@ -2850,6 +2852,9 @@ fi
 %endif
 
 %changelog
+* Fri Sep 27 2024 Zephyr Lykos <fedora@mochaa.ws> - 9.18-2
+- Pick https://gitlab.winehq.org/wine/wine/-/merge_requests/6547
+
 * Sun Sep 22 2024 Zephyr Lykos <fedora@mochaa.ws> - 9.18-1
 - version update
 
