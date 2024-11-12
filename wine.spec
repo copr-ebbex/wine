@@ -40,8 +40,8 @@
 %endif
 
 Name:           wine
-Version:        9.18
-Release:        2%{?dist}
+Version:        9.21
+Release:        1%{?dist}
 Summary:        A compatibility layer for windows applications
 
 License:        LGPL-2.1-or-later
@@ -75,8 +75,6 @@ Source201:      wine.directory
 
 # mime types
 Source300:      wine-mime-msi.desktop
-
-Patch200:       https://gitlab.winehq.org/wine/wine/-/merge_requests/6547.patch
 
 # smooth tahoma (#693180)
 # disable embedded bitmaps
@@ -687,7 +685,6 @@ This package adds the opencl driver for wine.
 %prep
 %setup -qn wine-%{version}
 %patch -P 511 -p1 -b.cjk
-%patch -P 200 -p1
 
 %if 0%{?wine_staging}
 # setup and apply wine-staging patches
@@ -1269,6 +1266,7 @@ fi
 %{_libdir}/wine/%{winepedir}/d3dx11_42.dll
 %{_libdir}/wine/%{winepedir}/d3dx11_43.dll
 %{_libdir}/wine/%{winepedir}/d3dxof.dll
+%{_libdir}/wine/%{winepedir}/dataexchange.dll
 %{_libdir}/wine/%{winepedir}/davclnt.dll
 %{_libdir}/wine/%{winepedir}/dbgeng.dll
 %{_libdir}/wine/%{winepedir}/dbghelp.dll
@@ -1366,6 +1364,7 @@ fi
 %{_libdir}/wine/%{winepedir}/icmp.dll
 %{_libdir}/wine/%{winepedir}/ieframe.dll
 %{_libdir}/wine/%{winepedir}/ieproxy.dll
+%{_libdir}/wine/%{winepedir}/iertutil.dll
 %{_libdir}/wine/%{winepedir}/imaadp32.acm
 %{_libdir}/wine/%{winepedir}/imagehlp.dll
 %{_libdir}/wine/%{winepedir}/imm32.dll
@@ -1629,6 +1628,7 @@ fi
 %{_libdir}/wine/%{winepedir}/slc.dll
 %{_libdir}/wine/%{winepedir}/snmpapi.dll
 %{_libdir}/wine/%{winepedir}/softpub.dll
+%{_libdir}/wine/%{winepedir}/sort.exe
 %{_libdir}/wine/%{winepedir}/spoolsv.exe
 %{_libdir}/wine/%{winepedir}/sppc.dll
 %{_libdir}/wine/%{winepedir}/srclient.dll
@@ -1758,6 +1758,7 @@ fi
 %{_libdir}/wine/%{winepedir}/wmasf.dll
 %{_libdir}/wine/%{winepedir}/wmi.dll
 %{_libdir}/wine/%{winepedir}/wmic.exe
+%{_libdir}/wine/%{winepedir}/wmilib.sys
 %{_libdir}/wine/%{winepedir}/wmiutils.dll
 %{_libdir}/wine/%{winepedir}/wmp.dll
 %{_libdir}/wine/%{winepedir}/wmvcore.dll
@@ -2852,6 +2853,9 @@ fi
 %endif
 
 %changelog
+* Tue Nov 12 2024 Zephyr Lykos <fedora@mochaa.ws> - 9.21-1
+- version update
+
 * Fri Sep 27 2024 Zephyr Lykos <fedora@mochaa.ws> - 9.18-2
 - Pick https://gitlab.winehq.org/wine/wine/-/merge_requests/6547
 
