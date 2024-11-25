@@ -40,7 +40,7 @@
 %endif
 
 Name:           wine
-Version:        9.21
+Version:        9.22
 Release:        1%{?dist}
 Summary:        A compatibility layer for windows applications
 
@@ -1362,6 +1362,7 @@ fi
 %{_libdir}/wine/%{winepedir}/iccvid.dll
 %{_libdir}/wine/%{winepedir}/icinfo.exe
 %{_libdir}/wine/%{winepedir}/icmp.dll
+%{_libdir}/wine/%{winepedir}/icmui.dll
 %{_libdir}/wine/%{winepedir}/ieframe.dll
 %{_libdir}/wine/%{winepedir}/ieproxy.dll
 %{_libdir}/wine/%{winepedir}/iertutil.dll
@@ -2853,6 +2854,9 @@ fi
 %endif
 
 %changelog
+* Mon Nov 25 2024 Zephyr Lykos <fedora@mochaa.ws> - 9.22-1
+- new version
+
 * Tue Nov 12 2024 Zephyr Lykos <fedora@mochaa.ws> - 9.21-1
 - version update
 
