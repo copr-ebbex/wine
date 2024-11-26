@@ -220,7 +220,7 @@ Requires:       /usr/bin/ntlm_auth
 Requires:       mesa-dri-drivers(x86-32)
 %endif
 %if 0%{?fedora} >= 33
-Recommends:     wine-dxvk(x86-32) >= 2.0
+Recommends:     wine-dxvk(x86-32)
 Recommends:     dosbox-staging
 %endif
 Recommends:     gstreamer1-plugins-good(x86-32)
@@ -243,7 +243,7 @@ Requires:       wine-mono = %winemono
 %endif
 Requires:       mesa-dri-drivers(x86-64)
 %if 0%{?fedora} >= 33
-Recommends:     wine-dxvk(x86-64) >= 2.0
+Recommends:     wine-dxvk(x86-64)
 Recommends:     dosbox-staging
 %endif
 Recommends:     gstreamer1-plugins-good(x86-64)
@@ -790,13 +790,15 @@ touch %{buildroot}%{_bindir}/wine
 touch %{buildroot}%{_bindir}/wine-preloader
 touch %{buildroot}%{_bindir}/wineserver
 mv %{buildroot}%{_libdir}/wine/%{winepedir}/dxgi.dll %{buildroot}%{_libdir}/wine/%{winepedir}/wine-dxgi.dll
-mv %{buildroot}%{_libdir}/wine/%{winepedir}/d3d8.dll %{buildroot}%{_libdir}/wine/%{winepedir}/wine-d3d8.dll
 mv %{buildroot}%{_libdir}/wine/%{winepedir}/d3d9.dll %{buildroot}%{_libdir}/wine/%{winepedir}/wine-d3d9.dll
+mv %{buildroot}%{_libdir}/wine/%{winepedir}/d3d10.dll %{buildroot}%{_libdir}/wine/%{winepedir}/wine-d3d10.dll
+mv %{buildroot}%{_libdir}/wine/%{winepedir}/d3d10_1.dll %{buildroot}%{_libdir}/wine/%{winepedir}/wine-d3d10_1.dll
 mv %{buildroot}%{_libdir}/wine/%{winepedir}/d3d10core.dll %{buildroot}%{_libdir}/wine/%{winepedir}/wine-d3d10core.dll
 mv %{buildroot}%{_libdir}/wine/%{winepedir}/d3d11.dll %{buildroot}%{_libdir}/wine/%{winepedir}/wine-d3d11.dll
 touch %{buildroot}%{_libdir}/wine/%{winepedir}/dxgi.dll
-touch %{buildroot}%{_libdir}/wine/%{winepedir}/d3d8.dll
 touch %{buildroot}%{_libdir}/wine/%{winepedir}/d3d9.dll
+touch %{buildroot}%{_libdir}/wine/%{winepedir}/d3d10.dll
+touch %{buildroot}%{_libdir}/wine/%{winepedir}/d3d10_1.dll
 touch %{buildroot}%{_libdir}/wine/%{winepedir}/d3d10core.dll
 touch %{buildroot}%{_libdir}/wine/%{winepedir}/d3d11.dll
 
@@ -1008,7 +1010,7 @@ fi
 
 %posttrans core
 # handle upgrades for a few package updates
-%{_sbindir}/alternatives --remove 'wine-d3d8%{?_isa}' %{_libdir}/wine/wine-d3d8.dll 2>/dev/null
+%{_sbindir}/alternatives --remove 'wine-dxgi%{?_isa}' %{_libdir}/wine/wine-dxgi.dll 2>/dev/null
 %{_sbindir}/alternatives --remove 'wine-d3d9%{?_isa}' %{_libdir}/wine/wine-d3d9.dll 2>/dev/null
 %{_sbindir}/alternatives --remove 'wine-d3d10core%{?_isa}' %{_libdir}/wine/wine-d3d10core.dll 2>/dev/null
 %{_sbindir}/alternatives --remove 'wine-d3d11%{?_isa}' %{_libdir}/wine/wine-d3d11.dll 2>/dev/null
@@ -1025,15 +1027,16 @@ fi
 %{_sbindir}/alternatives --install %{_bindir}/wineserver \
   wineserver %{_bindir}/wineserver32 10
 %endif
-%{_sbindir}/alternatives --install %{_libdir}/wine/%{winepedir}/d3d8.dll \
-  'wine-d3d8%{?_isa}' %{_libdir}/wine/%{winepedir}/wine-d3d8.dll 10
+%{_sbindir}/alternatives --install %{_libdir}/wine/%{winepedir}/dxgi.dll \
+  'wine-dxgi%{?_isa}' %{_libdir}/wine/%{winepedir}/wine-dxgi.dll 10
 %{_sbindir}/alternatives --install %{_libdir}/wine/%{winepedir}/d3d9.dll \
   'wine-d3d9%{?_isa}' %{_libdir}/wine/%{winepedir}/wine-d3d9.dll 10
-%{_sbindir}/alternatives --install %{_libdir}/wine/%{winepedir}/d3d10core.dll \
-  'wine-d3d10core%{?_isa}' %{_libdir}/wine/%{winepedir}/wine-d3d10core.dll 10
+%{_sbindir}/alternatives --install %{_libdir}/wine/%{winepedir}/d3d10.dll \
+  'wine-d3d10%{?_isa}' %{_libdir}/wine/%{winepedir}/wine-d3d10.dll 10 \
+  --slave  %{_libdir}/wine/%{winepedir}/d3d10_1.dll 'wine-d3d10_1%{?_isa}' %{_libdir}/wine/%{winepedir}/wine-d3d10_1.dll \
+  --slave  %{_libdir}/wine/%{winepedir}/d3d10core.dll 'wine-d3d10core%{?_isa}' %{_libdir}/wine/%{winepedir}/wine-d3d10core.dll
 %{_sbindir}/alternatives --install %{_libdir}/wine/%{winepedir}/d3d11.dll \
-  'wine-d3d11%{?_isa}' %{_libdir}/wine/%{winepedir}/wine-d3d11.dll 10 \
-  --slave %{_libdir}/wine/%{winepedir}/dxgi.dll 'wine-dxgi%{?_isa}' %{_libdir}/wine/%{winepedir}/wine-dxgi.dll
+  'wine-d3d11%{?_isa}' %{_libdir}/wine/%{winepedir}/wine-d3d11.dll 10
 
 %postun core
 %{?ldconfig}
@@ -1045,7 +1048,7 @@ if [ $1 -eq 0 ] ; then
   %{_sbindir}/alternatives --remove wine %{_bindir}/wine32
   %{_sbindir}/alternatives --remove wineserver %{_bindir}/wineserver32
 %endif
-  %{_sbindir}/alternatives --remove 'wine-d3d8%{?_isa}' %{_libdir}/wine/%{winepedir}/wine-d3d8.dll
+  %{_sbindir}/alternatives --remove 'wine-dxgi%{?_isa}' %{_libdir}/wine/%{winepedir}/wine-dxgi.dll
   %{_sbindir}/alternatives --remove 'wine-d3d9%{?_isa}' %{_libdir}/wine/%{winepedir}/wine-d3d9.dll
   %{_sbindir}/alternatives --remove 'wine-d3d10core%{?_isa}' %{_libdir}/wine/%{winepedir}/wine-d3d10core.dll
   %{_sbindir}/alternatives --remove 'wine-d3d11%{?_isa}' %{_libdir}/wine/%{winepedir}/wine-d3d11.dll
@@ -1249,9 +1252,11 @@ fi
 %{_libdir}/wine/%{winesodir}/ctapi32.so
 %{_libdir}/wine/%{winepedir}/ctl3d32.dll
 %{_libdir}/wine/%{winepedir}/d2d1.dll
-%{_libdir}/wine/%{winepedir}/d3d10.dll
-%{_libdir}/wine/%{winepedir}/d3d10_1.dll
+%ghost %{_libdir}/wine/%{winepedir}/d3d10.dll
+%ghost %{_libdir}/wine/%{winepedir}/d3d10_1.dll
 %ghost %{_libdir}/wine/%{winepedir}/d3d10core.dll
+%{_libdir}/wine/%{winepedir}/wine-d3d10.dll
+%{_libdir}/wine/%{winepedir}/wine-d3d10_1.dll
 %{_libdir}/wine/%{winepedir}/wine-d3d10core.dll
 %ghost %{_libdir}/wine/%{winepedir}/d3d11.dll
 %{_libdir}/wine/%{winepedir}/wine-d3d11.dll
@@ -1803,8 +1808,7 @@ fi
 %{_libdir}/wine/%{winepedir}/sfc.dll
 %{_libdir}/wine/%{winepedir}/wineps.drv
 %{_libdir}/wine/%{winesodir}/wineps.so
-%ghost %{_libdir}/wine/%{winepedir}/d3d8.dll
-%{_libdir}/wine/%{winepedir}/wine-d3d8.dll
+%{_libdir}/wine/%{winepedir}/d3d8.dll
 %{_libdir}/wine/%{winepedir}/d3d8thk.dll
 %ghost %{_libdir}/wine/%{winepedir}/d3d9.dll
 %{_libdir}/wine/%{winepedir}/wine-d3d9.dll
