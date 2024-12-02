@@ -790,12 +790,14 @@ touch %{buildroot}%{_bindir}/wine
 touch %{buildroot}%{_bindir}/wine-preloader
 touch %{buildroot}%{_bindir}/wineserver
 mv %{buildroot}%{_libdir}/wine/%{winepedir}/dxgi.dll %{buildroot}%{_libdir}/wine/%{winepedir}/wine-dxgi.dll
+mv %{buildroot}%{_libdir}/wine/%{winepedir}/d3d8.dll %{buildroot}%{_libdir}/wine/%{winepedir}/wine-d3d8.dll
 mv %{buildroot}%{_libdir}/wine/%{winepedir}/d3d9.dll %{buildroot}%{_libdir}/wine/%{winepedir}/wine-d3d9.dll
 mv %{buildroot}%{_libdir}/wine/%{winepedir}/d3d10.dll %{buildroot}%{_libdir}/wine/%{winepedir}/wine-d3d10.dll
 mv %{buildroot}%{_libdir}/wine/%{winepedir}/d3d10_1.dll %{buildroot}%{_libdir}/wine/%{winepedir}/wine-d3d10_1.dll
 mv %{buildroot}%{_libdir}/wine/%{winepedir}/d3d10core.dll %{buildroot}%{_libdir}/wine/%{winepedir}/wine-d3d10core.dll
 mv %{buildroot}%{_libdir}/wine/%{winepedir}/d3d11.dll %{buildroot}%{_libdir}/wine/%{winepedir}/wine-d3d11.dll
 touch %{buildroot}%{_libdir}/wine/%{winepedir}/dxgi.dll
+touch %{buildroot}%{_libdir}/wine/%{winepedir}/d3d8.dll
 touch %{buildroot}%{_libdir}/wine/%{winepedir}/d3d9.dll
 touch %{buildroot}%{_libdir}/wine/%{winepedir}/d3d10.dll
 touch %{buildroot}%{_libdir}/wine/%{winepedir}/d3d10_1.dll
@@ -1029,6 +1031,8 @@ fi
 %endif
 %{_sbindir}/alternatives --install %{_libdir}/wine/%{winepedir}/dxgi.dll \
   'wine-dxgi%{?_isa}' %{_libdir}/wine/%{winepedir}/wine-dxgi.dll 10
+%{_sbindir}/alternatives --install %{_libdir}/wine/%{winepedir}/d3d8.dll \
+  'wine-d3d8%{?_isa}' %{_libdir}/wine/%{winepedir}/wine-d3d8.dll 10
 %{_sbindir}/alternatives --install %{_libdir}/wine/%{winepedir}/d3d9.dll \
   'wine-d3d9%{?_isa}' %{_libdir}/wine/%{winepedir}/wine-d3d9.dll 10
 %{_sbindir}/alternatives --install %{_libdir}/wine/%{winepedir}/d3d10.dll \
@@ -1049,6 +1053,7 @@ if [ $1 -eq 0 ] ; then
   %{_sbindir}/alternatives --remove wineserver %{_bindir}/wineserver32
 %endif
   %{_sbindir}/alternatives --remove 'wine-dxgi%{?_isa}' %{_libdir}/wine/%{winepedir}/wine-dxgi.dll
+  %{_sbindir}/alternatives --remove 'wine-d3d8%{?_isa}' %{_libdir}/wine/%{winepedir}/wine-d3d8.dll
   %{_sbindir}/alternatives --remove 'wine-d3d9%{?_isa}' %{_libdir}/wine/%{winepedir}/wine-d3d9.dll
   %{_sbindir}/alternatives --remove 'wine-d3d10core%{?_isa}' %{_libdir}/wine/%{winepedir}/wine-d3d10core.dll
   %{_sbindir}/alternatives --remove 'wine-d3d11%{?_isa}' %{_libdir}/wine/%{winepedir}/wine-d3d11.dll
@@ -1808,7 +1813,8 @@ fi
 %{_libdir}/wine/%{winepedir}/sfc.dll
 %{_libdir}/wine/%{winepedir}/wineps.drv
 %{_libdir}/wine/%{winesodir}/wineps.so
-%{_libdir}/wine/%{winepedir}/d3d8.dll
+%ghost %{_libdir}/wine/%{winepedir}/d3d8.dll
+%{_libdir}/wine/%{winepedir}/wine-d3d8.dll
 %{_libdir}/wine/%{winepedir}/d3d8thk.dll
 %ghost %{_libdir}/wine/%{winepedir}/d3d9.dll
 %{_libdir}/wine/%{winepedir}/wine-d3d9.dll
