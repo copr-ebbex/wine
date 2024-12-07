@@ -3,7 +3,7 @@
 
 %global no64bit   0
 %global winegecko 2.47.4
-%global winemono  9.3.0
+%global winemono  9.4.0
 #global _default_patch_fuzz 2
 %ifarch %{ix86}
 %global winepedir i386-windows
@@ -40,14 +40,14 @@
 %endif
 
 Name:           wine
-Version:        9.22
-Release:        1%{?dist}
+Version:        10.0
+Release:        0.1%{?dist}
 Summary:        A compatibility layer for windows applications
 
 License:        LGPL-2.1-or-later
 URL:            https://www.winehq.org/
-Source0:        https://dl.winehq.org/wine/source/9.x/wine-%{version}.tar.xz
-Source10:       https://dl.winehq.org/wine/source/9.x/wine-%{version}.tar.xz.sign
+Source0:        https://dl.winehq.org/wine/source/10.0/wine-%{version}-rc1.tar.xz
+Source10:       https://dl.winehq.org/wine/source/10.0/wine-%{version}-rc1.tar.xz.sign
 
 Source1:        wine.systemd
 Source2:        wine-README-Fedora
@@ -87,7 +87,7 @@ Patch511:       wine-cjk.patch
 %if 0%{?wine_staging}
 # wine-staging patches
 # pulseaudio-patch is covered by that patch-set, too.
-Source900: https://github.com/wine-staging/wine-staging/archive/v%{version}.tar.gz#/wine-staging-%{version}.tar.gz
+Source900: https://github.com/wine-staging/wine-staging/archive/v%{version}-rc1.tar.gz#/wine-staging-%{version}-rc1.tar.gz
 %endif
 
 %if !%{?no64bit}
@@ -187,8 +187,8 @@ BuildRequires:  mingw32-libxml2
 BuildRequires:  mingw64-libxml2
 BuildRequires:  mingw32-libxslt
 BuildRequires:  mingw64-libxslt
-BuildRequires:  mingw32-vkd3d >= 1.12
-BuildRequires:  mingw64-vkd3d >= 1.12
+BuildRequires:  mingw32-vkd3d >= 1.14
+BuildRequires:  mingw64-vkd3d >= 1.14
 BuildRequires:  mingw32-vulkan-headers
 BuildRequires:  mingw64-vulkan-headers
 BuildRequires:  mingw32-zlib
@@ -325,7 +325,7 @@ Requires:  mingw32-libpng
 Requires:  mingw32-libtiff
 Requires:  mingw32-libxml2
 Requires:  mingw32-libxslt
-Requires:  mingw32-vkd3d >= 1.11
+Requires:  mingw32-vkd3d >= 1.14
 Requires:  mingw32-win-iconv
 Requires:  mingw32-zlib
 %endif
@@ -359,7 +359,7 @@ Requires:  mingw64-libpng
 Requires:  mingw64-libtiff
 Requires:  mingw64-libxml2
 Requires:  mingw64-libxslt
-Requires:  mingw64-vkd3d >= 1.11
+Requires:  mingw64-vkd3d >= 1.14
 Requires:  mingw64-win-iconv
 Requires:  mingw64-zlib
 %endif
@@ -385,8 +385,8 @@ Requires:       libva
 %endif
 %endif
 
-Provides:       bundled(libjpeg) = 9e
-Provides:       bundled(mpg123-libs) = 1.29.3
+Provides:       bundled(libjpeg) = 9f
+Provides:       bundled(mpg123-libs) = 1.32.9
 
 # removed as of 7.21
 Obsoletes:      wine-openal < 7.21
@@ -683,7 +683,7 @@ This package adds the opencl driver for wine.
 %endif
 
 %prep
-%setup -qn wine-%{version}
+%setup -qn wine-%{version}-rc1
 %patch -P 511 -p1 -b.cjk
 
 %if 0%{?wine_staging}
@@ -1741,9 +1741,11 @@ fi
 %{_libdir}/wine/%{winepedir}/windows.web.dll
 %{_libdir}/wine/%{winepedir}/windowscodecs.dll
 %{_libdir}/wine/%{winepedir}/windowscodecsext.dll
+%{_libdir}/wine/%{winesodir}/winebth.so
+%{_libdir}/wine/%{winepedir}/winebth.sys
+%{_libdir}/wine/%{winepedir}/winebus.sys
 %{_libdir}/wine/%{winepedir}/winedmo.dll
 %{_libdir}/wine/%{winesodir}/winedmo.so
-%{_libdir}/wine/%{winepedir}/winebus.sys
 %{_libdir}/wine/%{winesodir}/winegstreamer.so
 %{_libdir}/wine/%{winepedir}/winegstreamer.dll
 %{_libdir}/wine/%{winepedir}/winehid.sys
