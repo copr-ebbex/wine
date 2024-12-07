@@ -41,7 +41,7 @@
 
 Name:           wine
 Version:        10.0
-Release:        0.1%{?dist}
+Release:        0.1rc1%{?dist}
 Summary:        A compatibility layer for windows applications
 
 License:        LGPL-2.1-or-later
@@ -2870,6 +2870,9 @@ fi
 %endif
 
 %changelog
+* Fri Dec 06 2024 Michael Cronenworth <mike@cchtml.com> - 10.0-0.1rc1
+- version update
+
 * Mon Nov 25 2024 Zephyr Lykos <fedora@mochaa.ws> - 9.22-1
 - new version
 
