@@ -41,7 +41,7 @@
 
 Name:           wine
 Version:        10.0
-Release:        0.3rc1%{?dist}
+Release:        0.4rc2%{?dist}
 Summary:        A compatibility layer for windows applications
 
 License:        LGPL-2.1-or-later
@@ -1012,12 +1012,6 @@ fi
 %posttrans core
 # handle upgrades for a few package updates
 rm -f %{_libdir}/wine/%{winepedir}/d3d8.dll
-%{_sbindir}/alternatives --remove 'wine-dxgi%{?_isa}' %{_libdir}/wine/wine-dxgi.dll 2>/dev/null
-%{_sbindir}/alternatives --remove 'wine-d3d8%{?_isa}' %{_libdir}/wine/wine-d3d8.dll 2>/dev/null
-%{_sbindir}/alternatives --remove 'wine-d3d9%{?_isa}' %{_libdir}/wine/wine-d3d9.dll 2>/dev/null
-%{_sbindir}/alternatives --remove 'wine-d3d10core%{?_isa}' %{_libdir}/wine/wine-d3d10core.dll 2>/dev/null
-%{_sbindir}/alternatives --remove 'wine-d3d10%{?_isa}' %{_libdir}/wine/wine-d3d10.dll 2>/dev/null
-%{_sbindir}/alternatives --remove 'wine-d3d11%{?_isa}' %{_libdir}/wine/wine-d3d11.dll 2>/dev/null
 %ifarch x86_64 aarch64
 %{_sbindir}/alternatives --install %{_bindir}/wine \
   wine %{_bindir}/wine64 10 \
@@ -2870,6 +2864,9 @@ fi
 %endif
 
 %changelog
+* Mon Dec 16 2024 Michael Cronenworth <mike@cchtml.com> - 10.0-0.4rc2
+- version update
+
 * Tue Dec 10 2024 Michael Cronenworth <mike@cchtml.com> - 10.0-0.3rc1
 - Handle upgrades to convert d3d8.dll to alternatives take 2
 
