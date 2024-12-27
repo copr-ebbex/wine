@@ -41,7 +41,7 @@
 
 Name:           wine
 Version:        10.0
-Release:        0.5rc3%{?dist}
+Release:        0.6rc3%{?dist}
 Summary:        A compatibility layer for windows applications
 
 License:        LGPL-2.1-or-later
@@ -83,6 +83,9 @@ Source501:      wine-tahoma.conf
 Source502:      wine-README-tahoma
 
 Patch511:       wine-cjk.patch
+
+# https://gitlab.winehq.org/wine/wine/-/merge_requests/7077
+Patch550:       0001-mscoree-load-libmono-as-a-system-library.patch
 
 %if 0%{?wine_staging}
 # wine-staging patches
@@ -685,6 +688,7 @@ This package adds the opencl driver for wine.
 %prep
 %setup -qn wine-%{version}-rc3
 %patch -P 511 -p1 -b.cjk
+%patch -P 550 -p1
 
 %if 0%{?wine_staging}
 # setup and apply wine-staging patches
@@ -2864,6 +2868,9 @@ fi
 %endif
 
 %changelog
+* Fri Dec 27 2024 Zephyr Lykos <fedora@mochaa.ws> - 10.0-0.6rc3
+- Fix wine-mono not loading iconv.dll from mingw bindir
+
 * Thu Dec 26 2024 Michael Cronenworth <mike@cchtml.com> - 10.0-0.5rc3
 - version update
 

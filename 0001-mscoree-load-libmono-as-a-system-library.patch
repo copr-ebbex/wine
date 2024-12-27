@@ -1,0 +1,51 @@
+From d16d126980544c4102c568e7d6cc9973fc6ca342 Mon Sep 17 00:00:00 2001
+From: Zephyr Lykos <git@mochaa.ws>
+Date: Fri, 27 Dec 2024 13:54:46 +0800
+Subject: [PATCH] mscoree: load libmono as a system library
+
+This allows libmono to load extra libraries (notably win-iconv) from
+system_dllpath.
+
+For example, Fedora's wine-mono is built against a shared win-iconv
+installed in system_dllpath, but wine will not search there unless it's
+explicitly instructed to do so since bfbccf1a038e (ntdll: Prevent
+loading Wine system dependencies in place of identically named application
+DLLs.).
+
+Wine-Bug: https://bugs.winehq.org/show_bug.cgi?id=54573
+Signed-off-by: Zephyr Lykos <git@mochaa.ws>
+---
+ dlls/mscoree/metahost.c | 2 +-
+ dlls/ntdll/loader.c     | 3 ++-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/dlls/mscoree/metahost.c b/dlls/mscoree/metahost.c
+index e1dd00656e9..49850e69f91 100644
+--- a/dlls/mscoree/metahost.c
++++ b/dlls/mscoree/metahost.c
+@@ -192,7 +192,7 @@ static HRESULT load_mono(LPCWSTR mono_path)
+ 
+         if (!find_mono_dll(mono_path, mono_dll_path)) goto fail;
+ 
+-        mono_handle = LoadLibraryW(mono_dll_path);
++        mono_handle = LoadLibraryExW(mono_dll_path, NULL, LDR_WINE_INTERNAL);
+ 
+         if (!mono_handle) goto fail;
+ 
+diff --git a/dlls/ntdll/loader.c b/dlls/ntdll/loader.c
+index 0c25fe14133..c7a9a979868 100644
+--- a/dlls/ntdll/loader.c
++++ b/dlls/ntdll/loader.c
+@@ -3374,7 +3374,8 @@ NTSTATUS WINAPI DECLSPEC_HOTPATCH LdrLoadDll(LPCWSTR path_name, DWORD flags,
+ 
+     RtlEnterCriticalSection( &loader_section );
+ 
+-    nts = load_dll( path_name, dllname ? dllname : libname->Buffer, flags, &wm, FALSE );
++    nts = load_dll( path_name, dllname ? dllname : libname->Buffer, flags, &wm,
++            (flags & LDR_WINE_INTERNAL) != 0 );
+ 
+     if (nts == STATUS_SUCCESS && !(wm->ldr.Flags & LDR_DONT_RESOLVE_REFS))
+     {
+-- 
+2.47.1
+
