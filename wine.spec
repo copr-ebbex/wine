@@ -41,13 +41,13 @@
 
 Name:           wine
 Version:        10.0
-Release:        0.4rc2%{?dist}
+Release:        0.5rc3%{?dist}
 Summary:        A compatibility layer for windows applications
 
 License:        LGPL-2.1-or-later
 URL:            https://www.winehq.org/
-Source0:        https://dl.winehq.org/wine/source/10.0/wine-%{version}-rc2.tar.xz
-Source10:       https://dl.winehq.org/wine/source/10.0/wine-%{version}-rc2.tar.xz.sign
+Source0:        https://dl.winehq.org/wine/source/10.0/wine-%{version}-rc3.tar.xz
+Source10:       https://dl.winehq.org/wine/source/10.0/wine-%{version}-rc3.tar.xz.sign
 
 Source1:        wine.systemd
 Source2:        wine-README-Fedora
@@ -87,7 +87,7 @@ Patch511:       wine-cjk.patch
 %if 0%{?wine_staging}
 # wine-staging patches
 # pulseaudio-patch is covered by that patch-set, too.
-Source900: https://github.com/wine-staging/wine-staging/archive/v%{version}-rc2.tar.gz#/wine-staging-%{version}-rc2.tar.gz
+Source900: https://github.com/wine-staging/wine-staging/archive/v%{version}-rc3.tar.gz#/wine-staging-%{version}-rc3.tar.gz
 %endif
 
 %if !%{?no64bit}
@@ -683,7 +683,7 @@ This package adds the opencl driver for wine.
 %endif
 
 %prep
-%setup -qn wine-%{version}-rc2
+%setup -qn wine-%{version}-rc3
 %patch -P 511 -p1 -b.cjk
 
 %if 0%{?wine_staging}
@@ -2864,6 +2864,9 @@ fi
 %endif
 
 %changelog
+* Thu Dec 26 2024 Michael Cronenworth <mike@cchtml.com> - 10.0-0.5rc3
+- version update
+
 * Mon Dec 16 2024 Michael Cronenworth <mike@cchtml.com> - 10.0-0.4rc2
 - version update
 
