@@ -41,7 +41,7 @@
 
 Name:           wine
 Version:        10.0
-Release:        0.7rc4%{?dist}
+Release:        0.8rc4%{?dist}
 Summary:        A compatibility layer for windows applications
 
 License:        LGPL-2.1-or-later
@@ -2864,6 +2864,9 @@ fi
 %endif
 
 %changelog
+* Sun Jan 19 2025 Fedora Release Engineering <releng@fedoraproject.org> - 10.0-0.8rc4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_42_Mass_Rebuild
+
 * Mon Jan 06 2025 Michael Cronenworth <mike@cchtml.com> - 10.0-0.7rc4
 - version update
 
