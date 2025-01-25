@@ -4,6 +4,9 @@
 %global no64bit   0
 %global winegecko 2.47.4
 %global winemono  9.4.0
+%if 0%{?fedora}
+%global opencl    1
+%endif
 #global _default_patch_fuzz 2
 %ifarch %{ix86}
 %global winepedir i386-windows
@@ -106,7 +109,7 @@ BuildRequires:  librsvg2
 BuildRequires:  librsvg2-devel
 BuildRequires:  libstdc++-devel
 BuildRequires:  pkgconfig(libusb-1.0)
-%if 0%{?fedora}
+%if 0%{?opencl}
 BuildRequires:  ocl-icd-devel
 BuildRequires:  opencl-headers
 %endif
@@ -636,7 +639,7 @@ Requires: wine-core = %{version}-%{release}
 %description alsa
 This package adds an alsa driver for wine.
 
-%if 0%{?fedora}
+%if 0%{?opencl}
 %package opencl
 Summary: OpenCL support for wine
 Requires: wine-core = %{version}-%{release}
@@ -2081,7 +2084,7 @@ fi
 %{_libdir}/wine/%{winepedir}/winealsa.drv
 %{_libdir}/wine/%{winesodir}/winealsa.so
 
-%if 0%{?fedora}
+%if 0%{?opencl}
 %files opencl
 %{_libdir}/wine/%{winepedir}/opencl.dll
 %{_libdir}/wine/%{winesodir}/opencl.so
