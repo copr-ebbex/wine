@@ -200,22 +200,16 @@ Requires:       wine-ldap(x86-32) = %{version}-%{release}
 Requires:       wine-smartcard(x86-32) = %{version}-%{release}
 Requires:       wine-twain(x86-32) = %{version}-%{release}
 Requires:       wine-pulseaudio(x86-32) = %{version}-%{release}
-%if 0%{?fedora}
 Requires:       wine-opencl(x86-32) = %{version}-%{release}
-%endif
-%if 0%{?fedora} >= 17
 Requires:       mingw32-wine-gecko = %winegecko
 Requires:       wine-mono = %winemono
-%endif
 #  wait for rhbz#968860 to require arch-specific samba-winbind-clients
 Requires:       /usr/bin/ntlm_auth
 Requires:       mesa-dri-drivers(x86-32)
-%endif
-%if 0%{?fedora} >= 33
 Recommends:     wine-dxvk(x86-32)
 Recommends:     dosbox-staging
-%endif
 Recommends:     gstreamer1-plugins-good(x86-32)
+%endif
 %endif
 
 # x86-64 parts
@@ -228,16 +222,12 @@ Requires:       wine-twain(x86-64) = %{version}-%{release}
 Requires:       wine-pulseaudio(x86-64) = %{version}-%{release}
 %if 0%{?fedora}
 Requires:       wine-opencl(x86-64) = %{version}-%{release}
-%endif
-%if 0%{?fedora} >= 17
 Requires:       mingw64-wine-gecko = %winegecko
 Requires:       wine-mono = %winemono
-%endif
-Requires:       mesa-dri-drivers(x86-64)
-%if 0%{?fedora} >= 33
 Recommends:     wine-dxvk(x86-64)
 Recommends:     dosbox-staging
 %endif
+Requires:       mesa-dri-drivers(x86-64)
 Recommends:     gstreamer1-plugins-good(x86-64)
 %endif
 
@@ -702,11 +692,7 @@ staging/patchinstall.py DESTDIR="`pwd`" --all -W server-Stored_ACLs
 %undefine _fortify_level
 # Disable Red Hat specs for package notes (Fedora 38+) and annobin.
 # MinGW GCC does not support these options.
-%if 0%{?fedora_version} == 36
-export LDFLAGS="$(echo "%{build_ldflags}" | sed -e 's/-Wl,-z,relro//' -e 's/-Wl,--build-id=sha1//' -e 's/-Wl,-dT,\/home\/abuild\/rpmbuild\/BUILD\/wine.*//' -e 's/-specs=\/usr\/lib\/rpm\/redhat\/redhat-annobin-cc1//')"
-%else
 export LDFLAGS="$(echo "%{build_ldflags}" | sed -e 's/-Wl,-z,relro//' -e 's/-Wl,--build-id=sha1//' -e 's/-specs=\/usr\/lib\/rpm\/redhat\/redhat-package-notes//' -e 's/-specs=\/usr\/lib\/rpm\/redhat\/redhat-annobin-cc1//')"
-%endif
 %ifarch x86_64
 export CFLAGS="$(echo "%{optflags}" | sed -e 's/-O2//' -e 's/-fcf-protection//' -e 's/-fstack-protector-strong//' -e 's/-fstack-clash-protection//' -e 's/-specs=\/usr\/lib\/rpm\/redhat\/redhat-annobin-cc1//') -O2"
 %else
@@ -717,16 +703,7 @@ export CFLAGS="$(echo "%{optflags}" | sed -e 's/-fcf-protection//' -e 's/-fstack
 # Wine enabled -Wl,-WX that turns linker warnings into errors
 # Fedora passes '--as-needed' for all binaries and this is a warning from the linker, now an error, so disable flag for now
 sed -i 's/-Wl,-WX//g' configure
-%if 0%{?fedora} >= 33
 %global toolchain clang
-%else
-# ARM64 now requires clang
-# https://source.winehq.org/git/wine.git/commit/8fb8cc03c3edb599dd98f369e14a08f899cbff95
-export CC="/usr/bin/clang"
-# Fedora's default compiler flags now conflict with what clang supports
-# https://bugzilla.redhat.com/show_bug.cgi?id=1658311
-export CFLAGS="`echo $CFLAGS | sed -e 's/-fstack-clash-protection//'`"
-%endif
 %endif
 %ifarch armv7hl
 export CFLAGS="`echo $CFLAGS | sed -e 's/-fexceptions//'`"
