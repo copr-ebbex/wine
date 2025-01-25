@@ -1001,10 +1001,10 @@ fi
 # meta package
 
 %files core
+%license LICENSE
+%license LICENSE.OLD
+%license COPYING.LIB
 %doc ANNOUNCE.md
-%doc COPYING.LIB
-%doc LICENSE
-%doc LICENSE.OLD
 %doc AUTHORS
 %doc README-FEDORA
 %doc README.md
@@ -1880,7 +1880,7 @@ fi
 %endif
 
 %files filesystem
-%doc COPYING.LIB
+%license COPYING.LIB
 %dir %{_datadir}/wine
 %dir %{_datadir}/wine/gecko
 %dir %{_datadir}/wine/mono
@@ -1924,21 +1924,21 @@ fi
 
 %if 0%{?wine_staging}
 %files arial-fonts
-%doc COPYING.LIB
+%license COPYING.LIB
 %{_datadir}/wine/fonts/arial*
 %endif
 #0%%{?wine_staging}
 
 %files courier-fonts
-%doc COPYING.LIB
+%license COPYING.LIB
 %{_datadir}/wine/fonts/cou*
 
 %files fixedsys-fonts
-%doc COPYING.LIB
+%license COPYING.LIB
 %{_datadir}/wine/fonts/*vgafix.fon
 
 %files system-fonts
-%doc COPYING.LIB
+%license COPYING.LIB
 %{_datadir}/wine/fonts/cvgasys.fon
 %{_datadir}/wine/fonts/hvgasys.fon
 %{_datadir}/wine/fonts/jvgasys.fon
@@ -1954,23 +1954,23 @@ fi
 %{_datadir}/wine/fonts/vgasyst.fon
 
 %files small-fonts
-%doc COPYING.LIB
+%license COPYING.LIB
 %{_datadir}/wine/fonts/sma*
 %{_datadir}/wine/fonts/jsma*
 
 %files marlett-fonts
-%doc COPYING.LIB
+%license COPYING.LIB
 %{_datadir}/wine/fonts/marlett.ttf
 
 %files ms-sans-serif-fonts
-%doc COPYING.LIB
+%license COPYING.LIB
 %{_datadir}/wine/fonts/sse*
 %if 0%{?wine_staging}
 %{_datadir}/wine/fonts/msyh.ttf
 %endif
 
 %files tahoma-fonts
-%doc COPYING.LIB
+%license COPYING.LIB
 %{_datadir}/wine/fonts/tahoma*ttf
 
 %files tahoma-fonts-system
@@ -1981,7 +1981,7 @@ fi
 
 %if 0%{?wine_staging}
 %files times-new-roman-fonts
-%doc COPYING.LIB
+%license COPYING.LIB
 %{_datadir}/wine/fonts/times.ttf
 
 %files times-new-roman-fonts-system
@@ -1989,15 +1989,15 @@ fi
 %endif
 
 %files symbol-fonts
-%doc COPYING.LIB
+%license COPYING.LIB
 %{_datadir}/wine/fonts/symbol.ttf
 
 %files webdings-fonts
-%doc COPYING.LIB
+%license COPYING.LIB
 %{_datadir}/wine/fonts/webdings.ttf
 
 %files wingdings-fonts
-%doc COPYING.LIB
+%license COPYING.LIB
 %{_datadir}/wine/fonts/wingding.ttf
 
 %files wingdings-fonts-system
