@@ -146,7 +146,7 @@ BuildRequires:  gettext-devel
 BuildRequires:  chrpath
 BuildRequires:  gstreamer1-devel
 BuildRequires:  gstreamer1-plugins-base-devel
-%if 0%{?fedora} > 24
+%if 0%{?fedora} || 0%{?rhel} >= 9
 BuildRequires:  mpg123-devel
 %endif
 BuildRequires:  SDL2-devel
