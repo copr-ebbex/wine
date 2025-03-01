@@ -32,7 +32,7 @@
 
 Name:           wine
 Version:        10.2
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        A compatibility layer for windows applications
 
 License:        LGPL-2.1-or-later
@@ -2091,6 +2091,10 @@ fi
 %endif
 
 %changelog
+* Sat Mar 01 2025 Peter Robinson <pbrobinson@fedoraproject.org> - 10.2-3
+- Spec cleanups: drop EOL RHEL releases, arm32 support
+- Use %%license fields, updates for some conditionals (mpg123, OpenCL)
+
 * Tue Feb 25 2025 Michael Cronenworth <mike@cchtml.com> - 10.2-2
 - Change x86_64 default alternatives from wine32 to wine64
 
