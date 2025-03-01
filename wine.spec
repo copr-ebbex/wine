@@ -31,14 +31,6 @@
 %endif
 # 0%%{?fedora}
 
-# binfmt macros for RHEL
-%if 0%{?rhel} == 7
-%global _binfmtdir /usr/lib/binfmt.d
-%global binfmt_apply() \
-/usr/lib/systemd/systemd-binfmt  %{?*} >/dev/null 2>&1 || : \
-%{nil}
-%endif
-
 Name:           wine
 Version:        10.2
 Release:        2%{?dist}
@@ -201,7 +193,7 @@ Requires:       wine-fonts = %{version}-%{release}
 
 # x86-32 parts
 %ifarch %{ix86} x86_64
-%if 0%{?fedora} || 0%{?rhel} <= 6
+%if 0%{?fedora}
 Requires:       wine-core(x86-32) = %{version}-%{release}
 Requires:       wine-cms(x86-32) = %{version}-%{release}
 Requires:       wine-ldap(x86-32) = %{version}-%{release}
