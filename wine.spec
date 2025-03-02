@@ -947,11 +947,13 @@ fi
 rm -f %{_libdir}/wine/%{winepedir}/d3d8.dll
 rm -f %{_bindir}/wine-preloader
 %ifarch x86_64 aarch64
+%{_sbindir}/alternatives --remove wine %{_bindir}/wine64
 %{_sbindir}/alternatives --install %{_bindir}/wine \
   wine %{_bindir}/wine64 20
 %{_sbindir}/alternatives --install %{_bindir}/wineserver \
   wineserver %{_bindir}/wineserver64 20
 %else
+%{_sbindir}/alternatives --remove wine %{_bindir}/wine32
 %{_sbindir}/alternatives --install %{_bindir}/wine \
   wine %{_bindir}/wine32 10
 %{_sbindir}/alternatives --install %{_bindir}/wineserver \
@@ -2094,6 +2096,7 @@ fi
 * Sat Mar 01 2025 Peter Robinson <pbrobinson@fedoraproject.org> - 10.2-3
 - Spec cleanups: drop EOL RHEL releases, arm32 support
 - Use %%license fields, updates for some conditionals (mpg123, OpenCL)
+- Force alternatives removal
 
 * Tue Feb 25 2025 Michael Cronenworth <mike@cchtml.com> - 10.2-2
 - Change x86_64 default alternatives from wine32 to wine64
