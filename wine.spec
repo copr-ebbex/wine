@@ -654,7 +654,7 @@ This package adds the opencl driver for wine.
 %package wow32
 Summary:        Wine wow32 package
 
-%description wow64
+%description wow32
 This package adds symlinks for wine wow64 functionality.
 %endif
 
