@@ -32,7 +32,7 @@
 
 Name:           wine
 Version:        10.4
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        A compatibility layer for windows applications
 
 License:        LGPL-2.1-or-later
@@ -123,7 +123,12 @@ BuildRequires:  libgphoto2-devel
 BuildRequires:  libpcap-devel
 # modular x
 BuildRequires:  libX11-devel
-BuildRequires:  mesa-libGL-devel mesa-libGLU-devel mesa-libOSMesa-devel
+BuildRequires:  mesa-libGL-devel mesa-libGLU-devel
+%if 0%{?fedora} >= 42 || 0%{?rhel} >= 11
+BuildRequires:  mesa-compat-libOSMesa-devel
+%else
+BuildRequires:  mesa-libOSMesa-devel
+%endif
 BuildRequires:  libXxf86dga-devel libXxf86vm-devel
 BuildRequires:  libXrandr-devel libXrender-devel
 BuildRequires:  libXext-devel
@@ -2136,6 +2141,9 @@ fi
 %endif
 
 %changelog
+* Wed Jun 25 2025 José Expósito <jexposit@redhat.com> - 10.4-3
+- Use mesa-compat-libOSMesa on Fedora 42 and later
+
 * Tue Apr 01 2025 Michael Cronenworth <mike@cchtml.com> - 10.4-2
 - Initial support for new Wow64 mode
 
