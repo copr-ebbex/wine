@@ -43,7 +43,7 @@
 
 Name:           wine
 Version:        10.4
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        A compatibility layer for windows applications
 
 License:        LGPL-2.1-or-later
