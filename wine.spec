@@ -1198,6 +1198,15 @@ fi
 %{_libdir}/wine/%{winepedirs}/wscript.exe
 %{_libdir}/wine/%{winepedirs}/uninstaller.exe
 
+%ifarch %{ix86}
+%{_libdir}/wine/x86_64-unix
+%{_libdir}/wine/x86_64-windows
+%endif
+%ifarch x86_64
+%{_libdir}/wine/i386-unix
+%{_libdir}/wine/i386-windows
+%endif
+
 %{_libdir}/wine/%{winepedirs}/acledit.dll
 %{_libdir}/wine/%{winepedirs}/aclui.dll
 %{_libdir}/wine/%{winepedirs}/activeds.dll
