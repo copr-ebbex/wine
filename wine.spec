@@ -1,6 +1,10 @@
 # The new wow64 mode is disabled by default
 # https://gitlab.winehq.org/wine/wine/-/releases/wine-9.0#wow64
+%if 0%{?fedora} >= 43
 %bcond new_wow64 1
+%else
+%bcond new_wow64 0
+%endif
 
 # Compiling the preloader fails with hardening enabled
 %undefine _hardened_build
@@ -2232,6 +2236,7 @@ fi
 %changelog
 * Sat Jul 12 2025 Björn Esser <besser82@fedoraproject.org> - 10.12-2
 - Drop unneeded libOSMesa dependency
+- Use new wow64 mode for Fedora 43 and later, only
 
 * Sat Jul 12 2025 Björn Esser <besser82@fedoraproject.org> - 10.12-1
 - version update
