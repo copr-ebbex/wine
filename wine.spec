@@ -11,7 +11,7 @@
 
 %global no64bit   0
 %global winegecko 2.47.4
-%global winemono  10.2.0
+%global winemono  10.3.0
 %if 0%{?fedora}
 %global opencl    1
 %endif
@@ -47,7 +47,7 @@
 
 Name:           wine
 Version:        10.18
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A compatibility layer for windows applications
 
 License:        LGPL-2.1-or-later
@@ -2303,6 +2303,9 @@ fi
 %endif
 
 %changelog
+* Sun Nov 02 2025 Michael Cronenworth <mike@cchtml.com> - 10.18-2
+- wine-mono 10.3.0
+
 * Sun Nov 02 2025 Michael Cronenworth <mike@cchtml.com> - 10.18-1
 - version update
 - reorganize fonts packages (RHBZ#2372648)
