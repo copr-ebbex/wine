@@ -47,7 +47,7 @@
 
 Name:           wine
 Version:        10.20
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A compatibility layer for windows applications
 
 License:        LGPL-2.1-or-later
@@ -422,7 +422,6 @@ handler service.
 %package -n ntsync-autoload
 Summary:       Kernel module load file for ntsync
 BuildArch:     noarch
-Conflicts:     steam
 Provides:      wine-ntsync = %{version}-%{release}
 Obsoletes:     wine-ntsync < %{version}-%{release}
 
@@ -2310,6 +2309,9 @@ fi
 %endif
 
 %changelog
+* Mon Dec 01 2025 Michael Cronenworth <mike@cchtml.com> - 10.20-2
+- remove Conflicts
+
 * Mon Dec 01 2025 Michael Cronenworth <mike@cchtml.com> - 10.20-1
 - version update
 
