@@ -47,7 +47,7 @@
 
 Name:           wine
 Version:        10.20
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        A compatibility layer for windows applications
 
 License:        LGPL-2.1-or-later
@@ -2287,6 +2287,9 @@ fi
 %endif
 
 %changelog
+* Tue Dec 09 2025 Michael Cronenworth <mike@cchtml.com> - 10.20-3
+- Bring sanity to the upgrade path, credit Gordon Messmer (RHBZ#2401666)
+
 * Mon Dec 01 2025 Michael Cronenworth <mike@cchtml.com> - 10.20-2
 - remove Conflicts
 
