@@ -114,6 +114,12 @@ BuildRequires:  clang >= 5.0
 BuildRequires:  lld
 %else
 BuildRequires:  gcc
+%if 0%{?fedora} >= 45
+# binutils 2.47 no longer moves .rodata along with -Ttext, so the x86_64
+# preloader's fallback link overflows; libc.a lets configure's -static-pie
+# probe pass, which is the link upstream prefers anyway
+BuildRequires:  glibc-static
+%endif
 %endif
 BuildRequires:  autoconf
 BuildRequires:  make
