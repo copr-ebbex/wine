@@ -691,6 +691,11 @@ This package adds the opencl driver for wine.
 # setup and apply wine-staging patches
 gzip -dc %{SOURCE900} | tar -xf - --strip-components=1
 
+# gawk 5.4 rejects the unescaped + in gitapply.sh's regex, and every staging
+# patch then fails as "corrupted"; [+] means the same in any awk
+sed -i 's/(@| |+|-|/(@| |[+]|-|/' patches/gitapply.sh
+grep -qF '(@| |[+]|-|' patches/gitapply.sh
+
 staging/patchinstall.py DESTDIR="`pwd`" --all -W server-Stored_ACLs
 
 %endif
