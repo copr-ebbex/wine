@@ -2113,6 +2113,7 @@ fi
 %dir %{_datadir}/wine/fonts
 %{_datadir}/wine/wine.inf
 %{_datadir}/wine/nls/
+%{_datadir}/wine/winmd/
 
 %files common
 %{_bindir}/notepad
@@ -2127,7 +2128,6 @@ fi
 %{_bindir}/wineboot
 %{_bindir}/wineconsole
 %{_bindir}/winecfg
-%{_datadir}/wine/winmd/
 %{_mandir}/man1/wine.1*
 %{_mandir}/man1/wineserver.1*
 %{_mandir}/man1/msiexec.1*
@@ -2322,6 +2322,10 @@ fi
 %endif
 
 %changelog
+* Mon Oct 05 2026 Erik Berg <fedora@slipsprogrammor.no> - 11.0-4.1
+- Ship the winmd files in wine-filesystem next to wine.inf, which copies
+  them into every prefix; without wine-common, wineboot hung forever
+
 * Fri Jul 17 2026 Fedora Release Engineering <releng@fedoraproject.org> - 11.0-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_45_Mass_Rebuild
 
