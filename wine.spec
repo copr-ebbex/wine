@@ -47,7 +47,7 @@
 
 Name:           wine
 Version:        11.0
-Release:        4%{?dist}
+Release:        4.1%{?dist}
 Summary:        A compatibility layer for windows applications
 
 License:        LGPL-2.1-or-later
